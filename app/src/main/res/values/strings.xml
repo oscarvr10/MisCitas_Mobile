@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MyAppointments</string>
+    <string name="label_login">Inicio de sesión</string>
+    <string name="label_email">Correo electrónico</string>
+    <string name="label_password">Contraseña</string>
+    <string name="btn_login">Ingresar</string>
+    <string name="label_register">¿Aún no te has registrado?</string>
+    <string name="label_description">Ingresa los datos para iniciar sesión</string>
+</resources>
