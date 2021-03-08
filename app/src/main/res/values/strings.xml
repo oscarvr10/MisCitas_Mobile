@@ -6,4 +6,9 @@
     <string name="btn_login">Ingresar</string>
     <string name="label_register">¿Aún no te has registrado?</string>
     <string name="label_description">Ingresa los datos para iniciar sesión</string>
+    <string name="register">Registro</string>
+    <string name="register_description">Ingresa los datos solicitados para registrarte</string>
+    <string name="name">Nombre completo</string>
+    <string name="btn_register">Registrarse</string>
+    <string name="please_fill_register_data">Por favor, completa tus datos</string>
 </resources>
