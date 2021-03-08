@@ -7,6 +7,10 @@
     <color name="indigo_700">#303F9F</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="blue">#5e72e4</color>
     <color name="gray">#f7fafc</color>
+
+    <color name="accent">#5e72e4</color>
+    <color name="primaryDark">#172b4d</color>
+    <color name="primary">#825ee4</color>
+
 </resources>
