@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyAppointments</string>
+    <string name="app_name">S.R.Citas</string>
     <string name="label_login">Inicio de sesión</string>
     <string name="label_email">Correo electrónico</string>
     <string name="label_password">Contraseña</string>
@@ -11,4 +11,22 @@
     <string name="name">Nombre completo</string>
     <string name="btn_register">Registrarse</string>
     <string name="please_fill_register_data">Por favor, completa tus datos</string>
+    <string name="btn_create_appointment">Registrar Cita</string>
+    <string name="btn_my_appointments">Mis Citas</string>
+    <string name="btn_log_out">Cerrar sesión</string>
+    <string name="welcome">Bienvenido</string>
+    <string name="label_create_appointment">Reservar Cita</string>
+    <string name="label_appt_description">Descripción</string>
+    <string name="label_specialty">Especialidad</string>
+    <string name="label_type">Tipo de Cita</string>
+    <string name="radio_test">Exámen</string>
+    <string name="radio_consultation">Consulta</string>
+    <string name="radio_surgery">Operación</string>
+    <string name="label_schedule_type">Tipo de Cita</string>
+    <string name="btn_next">Siguiente</string>
+    <string name="label_doctor">Médico</string>
+    <string name="label_schedule_date">Fecha para la cita</string>
+    <string name="btn_confirm">Confirmar</string>
+    <string name="saved_appointment">Cita registada exitosamente</string>
+    <string name="date_format">%1$d-%2$s-%3$s</string>
 </resources>
