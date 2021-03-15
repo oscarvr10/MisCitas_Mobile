@@ -29,4 +29,8 @@
     <string name="btn_confirm">Confirmar</string>
     <string name="saved_appointment">Cita registada exitosamente</string>
     <string name="date_format">%1$d-%2$s-%3$s</string>
+    <string name="item_appointment_id">Cita Médica %1$d</string>
+    <string name="item_appointment_date">Atención el dia %1$s</string>
+    <string name="item_appointment_time">A las %1$s</string>
+    <string name="label_my_appointments">Mis Citas Médicas</string>
 </resources>
