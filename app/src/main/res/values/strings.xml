@@ -33,4 +33,5 @@
     <string name="item_appointment_date">Atención el dia %1$s</string>
     <string name="item_appointment_time">A las %1$s</string>
     <string name="label_my_appointments">Mis Citas Médicas</string>
+    <string name="label_account_registered">¿Ya tienes una cuenta?</string>
 </resources>
