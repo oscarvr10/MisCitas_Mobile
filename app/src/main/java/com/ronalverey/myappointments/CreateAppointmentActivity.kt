@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.ronalverey.myappointments.databinding.ActivityCreateAppointmentBinding
 import java.util.*
 
@@ -24,8 +25,12 @@ class  CreateAppointmentActivity : AppCompatActivity() {
 
     private fun initializeControls (){
         binding.btnNext.setOnClickListener{
-            binding.cardStep1.visibility = View.GONE
-            binding.cardStep2.visibility = View.VISIBLE
+            if (binding.etDescription.text.toString().length < 3){
+                binding.etDescription.error = getString(R.string.validate_appointment_description)
+            } else {
+                binding.cardStep1.visibility = View.GONE
+                binding.cardStep2.visibility = View.VISIBLE
+            }
         }
 
         binding.btnConfirm.setOnClickListener{
@@ -98,4 +103,22 @@ class  CreateAppointmentActivity : AppCompatActivity() {
 
     private fun Int.toDigits () = if(this > 9) this.toString() else "0$this"
 
+    override fun onBackPressed() {
+        if (binding.cardStep2.visibility == View.VISIBLE){
+            binding.cardStep2.visibility = View.GONE
+            binding.cardStep1.visibility = View.VISIBLE
+        } else if (binding.cardStep1.visibility == View.GONE) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.dialog_create_appointment_exit_title))
+            builder.setMessage(getString(R.string.dialog_create_appointment_exit_message))
+            builder.setPositiveButton(getString(R.string.dialog_create_appointment_exit_positive_btn)) { dialog, which ->
+                finish()
+            }
+            builder.setNegativeButton(getString(R.string.dialog_create_appointment_exit_negative_btn)) { dialog, which ->
+                dialog.dismiss()
+            }
+            val dialog = builder.create()
+            dialog.show()
+        }
+    }
 }
