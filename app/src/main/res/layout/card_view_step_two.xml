@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardStep2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
+    app:contentPadding="12dp">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:text="@string/label_doctor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <Spinner
+                android:id="@+id/spinnerDoctors"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_width="wrap_content"
+                android:text="@string/label_schedule_date"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <EditText
+                android:background="@color/white"
+                android:clickable="true"
+                android:elevation="@dimen/cardview_default_elevation"
+                android:focusable="false"
+                android:id="@+id/etScheduledDate"
+                android:inputType="date"
+                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:maxLines="1"
+                android:onClick="onClickScheduledDate"
+                android:shadowRadius="8" />
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/radioGroupLeft"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:orientation="vertical"></LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/radioGroupRight"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:orientation="vertical"></LinearLayout>
+            </LinearLayout>
+
+            <Button
+                style="@style/MenuButton"
+                android:drawableRight="@drawable/ic_next"
+                android:id="@+id/btnNext2"
+                android:layout_marginTop="12dp"
+                android:layout_width="match_parent"
+                android:text="@string/btn_next" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.cardview.widget.CardView>

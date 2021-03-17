@@ -1,20 +1,20 @@
 package com.ronalverey.myappointments
 
 import android.app.DatePickerDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.Builder
+import androidx.appcompat.app.AppCompatActivity
 import com.ronalverey.myappointments.databinding.ActivityCreateAppointmentBinding
 import java.util.*
 
-class  CreateAppointmentActivity : AppCompatActivity() {
+class CreateAppointmentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateAppointmentBinding
     private var selectedCalendar = Calendar.getInstance()
-    private var selectedRadioButton: RadioButton? = null
+    private var selectedTimeRadioButton: RadioButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,25 +23,44 @@ class  CreateAppointmentActivity : AppCompatActivity() {
         initializeControls()
     }
 
-    private fun initializeControls (){
-        binding.btnNext.setOnClickListener{
-            if (binding.etDescription.text.toString().length < 3){
-                binding.etDescription.error = getString(R.string.validate_appointment_description)
+    private fun initializeControls() {
+        binding.layoutStep1.btnNext.setOnClickListener {
+            if (binding.layoutStep1.etDescription.text.toString().length < 3) {
+                binding.layoutStep1.etDescription.error = getString(R.string.validate_appointment_description)
             } else {
-                binding.cardStep1.visibility = View.GONE
-                binding.cardStep2.visibility = View.VISIBLE
+                binding.layoutStep1.cardStep1.visibility = View.GONE
+                binding.layoutStep2.cardStep2.visibility = View.VISIBLE
             }
         }
 
-        binding.btnConfirm.setOnClickListener{
+        binding.layoutStep2.btnNext2.setOnClickListener {
+            showAppointmentDataToConfirm()
+            binding.layoutStep2.cardStep2.visibility = View.GONE
+            binding.layoutStep3.cardStep3.visibility = View.VISIBLE
+        }
+
+        binding.layoutStep3.btnConfirm.setOnClickListener {
             Toast.makeText(this, getString(R.string.saved_appointment), Toast.LENGTH_SHORT).show()
             //finish()
         }
         val specialtyOptions = arrayOf("Especialidad A", "Especialidad B", "Especialidad C")
-        binding.spinnerSpecialties.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, specialtyOptions)
+        binding.layoutStep1.spinnerSpecialties.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, specialtyOptions)
 
         val doctorOptions = arrayOf("Doctor A", "Doctor B", "Doctor C")
-        binding.spinnerDoctors.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, doctorOptions)
+        binding.layoutStep2.spinnerDoctors.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, doctorOptions)
+    }
+
+    private fun showAppointmentDataToConfirm() {
+        binding.layoutStep3.tvConfirmDescription.text = binding.layoutStep1.etDescription.text.toString()
+        binding.layoutStep3.tvConfirmSpecialty.text = binding.layoutStep2.spinnerDoctors.selectedItem.toString()
+
+        val selectedTypeId = binding.layoutStep1.radioGroupType.checkedRadioButtonId
+        val selectedType = binding.layoutStep1.radioGroupType.findViewById<RadioButton>(selectedTypeId)
+
+        binding.layoutStep3.tvConfirmType.text =selectedType.text.toString()
+        binding.layoutStep3.tvConfirmDoctor.text = binding.layoutStep1.spinnerSpecialties.selectedItem.toString()
+        binding.layoutStep3.tvConfirmScheduledDate.text = binding.layoutStep2.etScheduledDate.text.toString()
+        binding.layoutStep3.tvConfirmScheduledTime.text =  selectedTimeRadioButton?.text.toString()
     }
 
     fun onClickScheduledDate(v: View) {
@@ -51,8 +70,8 @@ class  CreateAppointmentActivity : AppCompatActivity() {
 
         val listener = DatePickerDialog.OnDateSetListener { view, y, m, d ->
             selectedCalendar.set(y, m, d)
-            binding.etScheduledDate.setText(resources.getString(R.string.date_format,y, (m + 1).toDigits(), d.toDigits()))
-            displayRadioButtons()
+            binding.layoutStep2.etScheduledDate.setText(resources.getString(R.string.date_format, y, (m + 1).toDigits(), d.toDigits()))
+            displayTimeRadioButtons()
         }
         createDatePickerDialog(listener, year, month, dayOfMonth)
     }
@@ -70,9 +89,9 @@ class  CreateAppointmentActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-    private fun displayRadioButtons() {
-        removeRadioButtons()
-        var hours = arrayOf("3:00 PM", "3:30 PM", "4:00 PM",  "4:30 PM")
+    private fun displayTimeRadioButtons() {
+        removeTimeRadioButtons()
+        var hours = arrayOf("3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM")
         var goToLeft = true
 
         hours.forEach {
@@ -81,44 +100,51 @@ class  CreateAppointmentActivity : AppCompatActivity() {
             radioButton.text = it
 
             radioButton.setOnClickListener { view ->
-                selectedRadioButton?.isChecked = false
-                selectedRadioButton = view as RadioButton?
-                selectedRadioButton?.isChecked = true
+                selectedTimeRadioButton?.isChecked = false
+                selectedTimeRadioButton = view as RadioButton?
+                selectedTimeRadioButton?.isChecked = true
             }
 
-            if(goToLeft)
-                binding.radioGroupLeft.addView(radioButton)
+            if (goToLeft)
+                binding.layoutStep2.radioGroupLeft.addView(radioButton)
             else
-                binding.radioGroupRight.addView(radioButton)
+                binding.layoutStep2.radioGroupRight.addView(radioButton)
 
             goToLeft = !goToLeft
         }
     }
 
-    private fun removeRadioButtons() {
-        selectedRadioButton = null
-        binding.radioGroupLeft.removeAllViews()
-        binding.radioGroupRight.removeAllViews()
+    private fun removeTimeRadioButtons() {
+        selectedTimeRadioButton = null
+        binding.layoutStep2.radioGroupLeft.removeAllViews()
+        binding.layoutStep2.radioGroupRight.removeAllViews()
     }
 
-    private fun Int.toDigits () = if(this > 9) this.toString() else "0$this"
+    private fun Int.toDigits() = if (this > 9) this.toString() else "0$this"
 
     override fun onBackPressed() {
-        if (binding.cardStep2.visibility == View.VISIBLE){
-            binding.cardStep2.visibility = View.GONE
-            binding.cardStep1.visibility = View.VISIBLE
-        } else if (binding.cardStep1.visibility == View.GONE) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(getString(R.string.dialog_create_appointment_exit_title))
-            builder.setMessage(getString(R.string.dialog_create_appointment_exit_message))
-            builder.setPositiveButton(getString(R.string.dialog_create_appointment_exit_positive_btn)) { dialog, which ->
-                finish()
+        when {
+            binding.layoutStep3.cardStep3.visibility == View.VISIBLE -> {
+                binding.layoutStep3.cardStep3.visibility = View.GONE
+                binding.layoutStep2.cardStep2.visibility = View.VISIBLE
             }
-            builder.setNegativeButton(getString(R.string.dialog_create_appointment_exit_negative_btn)) { dialog, which ->
-                dialog.dismiss()
+            binding.layoutStep2.cardStep2.visibility == View.VISIBLE -> {
+                binding.layoutStep2.cardStep2.visibility = View.GONE
+                binding.layoutStep1.cardStep1.visibility = View.VISIBLE
             }
-            val dialog = builder.create()
-            dialog.show()
+            binding.layoutStep1.cardStep1.visibility == View.VISIBLE -> {
+                val builder = Builder(this)
+                builder.setTitle(getString(R.string.dialog_create_appointment_exit_title))
+                builder.setMessage(getString(R.string.dialog_create_appointment_exit_message))
+                builder.setPositiveButton(getString(R.string.dialog_create_appointment_exit_positive_btn)) { dialog, which ->
+                    finish()
+                }
+                builder.setNegativeButton(getString(R.string.dialog_create_appointment_exit_negative_btn)) { dialog, which ->
+                    dialog.dismiss()
+                }
+                val dialog = builder.create()
+                dialog.show()
+            }
         }
     }
 }
