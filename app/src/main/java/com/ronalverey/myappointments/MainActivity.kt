@@ -13,6 +13,11 @@ import com.ronalverey.myappointments.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private var binding: ActivityMainBinding? = null
 
+    //First time it's required it will be initialized just once
+    private val snackbar by lazy {
+        Snackbar.make(binding!!.mainLayout, R.string.press_back_again, Snackbar.LENGTH_SHORT)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -50,5 +55,13 @@ class MainActivity : AppCompatActivity() {
         //editor.putBoolean("session", true).apply();
         val prefs = defaultPrefs(this)
         prefs["session"] = true
+    }
+
+    override fun onBackPressed() {
+        if (snackbar.isShown)
+            super.onBackPressed()
+        else
+            snackbar.show()
+
     }
 }
