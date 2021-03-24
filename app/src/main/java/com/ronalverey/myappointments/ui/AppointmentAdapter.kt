@@ -1,9 +1,10 @@
-package com.ronalverey.myappointments
+package com.ronalverey.myappointments.ui
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.ronalverey.myappointments.R
 import com.ronalverey.myappointments.databinding.ItemAppointmentBinding
 import com.ronalverey.myappointments.model.Appointment
 

@@ -1,4 +1,4 @@
-package com.ronalverey.myappointments
+package com.ronalverey.myappointments.ui
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
+import com.ronalverey.myappointments.R
 import com.ronalverey.myappointments.databinding.ActivityCreateAppointmentBinding
 import java.util.*
 
@@ -34,9 +36,19 @@ class CreateAppointmentActivity : AppCompatActivity() {
         }
 
         binding.layoutStep2.btnNext2.setOnClickListener {
-            showAppointmentDataToConfirm()
-            binding.layoutStep2.cardStep2.visibility = View.GONE
-            binding.layoutStep3.cardStep3.visibility = View.VISIBLE
+            when {
+                binding.layoutStep2.etScheduledDate.text.toString().isEmpty() ->
+                    binding.layoutStep2.etScheduledDate.error = getString(R.string.validate_appointment_date)
+
+                selectedTimeRadioButton == null ->
+                    Snackbar.make(binding.createAppntLayout, getString(R.string.validate_appointment_time), Snackbar.LENGTH_SHORT).show()
+
+                else -> {
+                    showAppointmentDataToConfirm()
+                    binding.layoutStep2.cardStep2.visibility = View.GONE
+                    binding.layoutStep3.cardStep3.visibility = View.VISIBLE
+                }
+            }
         }
 
         binding.layoutStep3.btnConfirm.setOnClickListener {
@@ -73,6 +85,7 @@ class CreateAppointmentActivity : AppCompatActivity() {
             binding.layoutStep2.etScheduledDate.setText(resources.getString(R.string.date_format, y, (m + 1).toDigits(), d.toDigits()))
             displayTimeRadioButtons()
         }
+        binding.layoutStep2.etScheduledDate.error = null
         createDatePickerDialog(listener, year, month, dayOfMonth)
     }
 

@@ -1,10 +1,9 @@
-package com.ronalverey.myappointments
+package com.ronalverey.myappointments.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ronalverey.myappointments.databinding.ActivityAppointmentBinding
-import com.ronalverey.myappointments.databinding.ActivityCreateAppointmentBinding
 import com.ronalverey.myappointments.model.Appointment
 
 class AppointmentsActivity : AppCompatActivity() {

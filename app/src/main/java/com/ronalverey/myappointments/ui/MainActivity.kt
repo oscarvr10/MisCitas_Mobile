@@ -1,4 +1,4 @@
-package com.ronalverey.myappointments
+package com.ronalverey.myappointments.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.ronalverey.myappointments.PreferenceHelper.defaultPrefs
 import com.ronalverey.myappointments.PreferenceHelper.get
 import com.ronalverey.myappointments.PreferenceHelper.set
+import com.ronalverey.myappointments.R
 import com.ronalverey.myappointments.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
