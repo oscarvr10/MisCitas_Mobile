@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:columnCount="1"
     android:rowCount="2"
-    tools:context=".RegisterActivity">
+    tools:context=".ui.RegisterActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

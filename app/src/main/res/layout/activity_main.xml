@@ -9,7 +9,7 @@
     android:columnCount="1"
     android:rowCount="2"
     android:id="@+id/mainLayout"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
