@@ -11,12 +11,22 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.ronalverey.myappointments.R
 import com.ronalverey.myappointments.databinding.ActivityCreateAppointmentBinding
+import com.ronalverey.myappointments.io.ApiService
+import com.ronalverey.myappointments.model.Specialty
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 class CreateAppointmentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateAppointmentBinding
     private var selectedCalendar = Calendar.getInstance()
     private var selectedTimeRadioButton: RadioButton? = null
+
+    private val apiService: ApiService by lazy {
+        ApiService.create()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +65,33 @@ class CreateAppointmentActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.saved_appointment), Toast.LENGTH_SHORT).show()
             //finish()
         }
-        val specialtyOptions = arrayOf("Especialidad A", "Especialidad B", "Especialidad C")
-        binding.layoutStep1.spinnerSpecialties.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, specialtyOptions)
+
+        loadSpecialties()
 
         val doctorOptions = arrayOf("Doctor A", "Doctor B", "Doctor C")
         binding.layoutStep2.spinnerDoctors.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, doctorOptions)
+    }
+
+    private fun loadSpecialties() {
+        var call = apiService.getSpecialties()
+        call.enqueue(object: Callback<ArrayList<Specialty>>{
+            override fun onResponse(call: Call<ArrayList<Specialty>>, response: Response<ArrayList<Specialty>>) {
+                if (response.isSuccessful){ // status 200...300
+                    var specialties = response.body()
+                    val specialtyOptions = ArrayList<String>()
+                    specialties?.forEach {
+                        specialtyOptions.add(it.name)
+                    }
+                    binding.layoutStep1.spinnerSpecialties.adapter = ArrayAdapter<String>(this@CreateAppointmentActivity, android.R.layout.simple_list_item_1, specialtyOptions)
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<Specialty>>, t: Throwable) {
+                Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_specialties), Toast.LENGTH_SHORT).show()
+                finish()
+            }
+
+        })
     }
 
     private fun showAppointmentDataToConfirm() {
