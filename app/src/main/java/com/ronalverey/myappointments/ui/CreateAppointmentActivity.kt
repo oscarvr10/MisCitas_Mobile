@@ -3,6 +3,7 @@ package com.ronalverey.myappointments.ui
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
@@ -12,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.ronalverey.myappointments.R
 import com.ronalverey.myappointments.databinding.ActivityCreateAppointmentBinding
 import com.ronalverey.myappointments.io.ApiService
+import com.ronalverey.myappointments.model.Doctor
 import com.ronalverey.myappointments.model.Specialty
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,9 +69,40 @@ class CreateAppointmentActivity : AppCompatActivity() {
         }
 
         loadSpecialties()
+        onSelectedSpecialtyChanged()
 
         val doctorOptions = arrayOf("Doctor A", "Doctor B", "Doctor C")
-        binding.layoutStep2.spinnerDoctors.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, doctorOptions)
+    }
+
+    private fun onSelectedSpecialtyChanged() {
+        binding.layoutStep1.spinnerSpecialties.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedSpecialty = adapter?.getItemAtPosition(position) as Specialty
+                loadDoctorsBySpecialty(selectedSpecialty.id)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+    }
+
+    private fun loadDoctorsBySpecialty(specialtyId: Int) {
+        var call = apiService.getDoctorsBySpecialty(specialtyId)
+        call.enqueue(object: Callback<ArrayList<Doctor>>{
+            override fun onResponse(call: Call<ArrayList<Doctor>>, response: Response<ArrayList<Doctor>>) {
+                if (response.isSuccessful){ // status 200...300
+                    response.body()?.let {
+                        var doctors = it.toMutableList()
+                        binding.layoutStep2.spinnerDoctors.adapter = ArrayAdapter<Doctor>(this@CreateAppointmentActivity, android.R.layout.simple_list_item_1, doctors)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<Doctor>>, t: Throwable) {
+                Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_doctors), Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        })
     }
 
     private fun loadSpecialties() {
@@ -77,12 +110,10 @@ class CreateAppointmentActivity : AppCompatActivity() {
         call.enqueue(object: Callback<ArrayList<Specialty>>{
             override fun onResponse(call: Call<ArrayList<Specialty>>, response: Response<ArrayList<Specialty>>) {
                 if (response.isSuccessful){ // status 200...300
-                    var specialties = response.body()
-                    val specialtyOptions = ArrayList<String>()
-                    specialties?.forEach {
-                        specialtyOptions.add(it.name)
+                    response.body()?.let {
+                        var specialties = it.toMutableList()
+                        binding.layoutStep1.spinnerSpecialties.adapter = ArrayAdapter<Specialty>(this@CreateAppointmentActivity, android.R.layout.simple_list_item_1, specialties)
                     }
-                    binding.layoutStep1.spinnerSpecialties.adapter = ArrayAdapter<String>(this@CreateAppointmentActivity, android.R.layout.simple_list_item_1, specialtyOptions)
                 }
             }
 
@@ -90,7 +121,6 @@ class CreateAppointmentActivity : AppCompatActivity() {
                 Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_specialties), Toast.LENGTH_SHORT).show()
                 finish()
             }
-
         })
     }
 
