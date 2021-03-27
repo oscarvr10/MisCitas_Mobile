@@ -2,6 +2,8 @@ package com.ronalverey.myappointments.ui
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -14,6 +16,7 @@ import com.ronalverey.myappointments.R
 import com.ronalverey.myappointments.databinding.ActivityCreateAppointmentBinding
 import com.ronalverey.myappointments.io.ApiService
 import com.ronalverey.myappointments.model.Doctor
+import com.ronalverey.myappointments.model.Schedule
 import com.ronalverey.myappointments.model.Specialty
 import retrofit2.Call
 import retrofit2.Callback
@@ -70,8 +73,38 @@ class CreateAppointmentActivity : AppCompatActivity() {
 
         loadSpecialties()
         onSelectedSpecialtyChanged()
+        onSelectedDoctorChanged()
 
         val doctorOptions = arrayOf("Doctor A", "Doctor B", "Doctor C")
+    }
+
+    private fun onSelectedDoctorChanged() {
+        binding.layoutStep2.spinnerDoctors.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (!binding.layoutStep2.etScheduledDate.text.isNullOrEmpty()){
+                    val selectedDoctor = adapter?.getItemAtPosition(position) as Doctor
+                    loadAvailableHours(selectedDoctor.id, binding.layoutStep2.etScheduledDate.text.toString())
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+        binding.layoutStep2.etScheduledDate.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val selectedDoctor = binding.layoutStep2.spinnerDoctors.selectedItem as Doctor;
+                loadAvailableHours(selectedDoctor.id, binding.layoutStep2.etScheduledDate.text.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
+
     }
 
     private fun onSelectedSpecialtyChanged() {
@@ -84,6 +117,26 @@ class CreateAppointmentActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
+    }
+
+    private fun loadAvailableHours(doctorId: Int, date: String) {
+        var call = apiService.getAvailableHours(doctorId, date)
+        call.enqueue(object: Callback<Schedule>{
+            override fun onResponse(call: Call<Schedule>, response: Response<Schedule>) {
+                if (response.isSuccessful){ // status 200...300
+                    response.body()?.let {
+                        var schedule = it
+                        //binding.layoutStep2.spinnerDoctors.adapter = ArrayAdapter<Doctor>(this@CreateAppointmentActivity, android.R.layout.simple_list_item_1, doctors)
+                        Toast.makeText(this@CreateAppointmentActivity, "morning: ${schedule?.morning.size}, afternoon: ${schedule?.afternoon.size}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Schedule>, t: Throwable) {
+                Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_hours), Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        })
     }
 
     private fun loadDoctorsBySpecialty(specialtyId: Int) {
@@ -196,30 +249,4 @@ class CreateAppointmentActivity : AppCompatActivity() {
     }
 
     private fun Int.toDigits() = if (this > 9) this.toString() else "0$this"
-
-    override fun onBackPressed() {
-        when {
-            binding.layoutStep3.cardStep3.visibility == View.VISIBLE -> {
-                binding.layoutStep3.cardStep3.visibility = View.GONE
-                binding.layoutStep2.cardStep2.visibility = View.VISIBLE
-            }
-            binding.layoutStep2.cardStep2.visibility == View.VISIBLE -> {
-                binding.layoutStep2.cardStep2.visibility = View.GONE
-                binding.layoutStep1.cardStep1.visibility = View.VISIBLE
-            }
-            binding.layoutStep1.cardStep1.visibility == View.VISIBLE -> {
-                val builder = Builder(this)
-                builder.setTitle(getString(R.string.dialog_create_appointment_exit_title))
-                builder.setMessage(getString(R.string.dialog_create_appointment_exit_message))
-                builder.setPositiveButton(getString(R.string.dialog_create_appointment_exit_positive_btn)) { dialog, which ->
-                    finish()
-                }
-                builder.setNegativeButton(getString(R.string.dialog_create_appointment_exit_negative_btn)) { dialog, which ->
-                    dialog.dismiss()
-                }
-                val dialog = builder.create()
-                dialog.show()
-            }
-        }
-    }
 }
