@@ -2,10 +2,12 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardStep2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:visibility="gone"
+    tools:visibility="visible"
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp"
     app:contentPadding="12dp">
@@ -51,6 +53,24 @@
                 android:onClick="onClickScheduledDate"
                 android:shadowRadius="8" />
 
+            <TextView
+                android:id="@+id/tvSelectDoctorAndDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/accent"
+                android:layout_margin="6dp"
+                android:text="@string/label_select_doctor_and_date"/>
+
+            <TextView
+                android:id="@+id/tvNotAvailableHours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryDark"
+                android:layout_margin="6dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:text="@string/label_not_available_hours"/>
+
             <LinearLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
@@ -62,7 +82,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:orientation="vertical"></LinearLayout>
+                    android:orientation="vertical"/>
 
                 <LinearLayout
                     android:id="@+id/radioGroupRight"
@@ -70,7 +90,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:orientation="vertical"></LinearLayout>
+                    android:orientation="vertical"/>
             </LinearLayout>
 
             <Button

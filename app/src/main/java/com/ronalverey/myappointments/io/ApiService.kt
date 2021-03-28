@@ -1,5 +1,7 @@
 package com.ronalverey.myappointments.io
 
+import com.ronalverey.myappointments.io.response.GenericResponse
+import com.ronalverey.myappointments.io.response.Login
 import com.ronalverey.myappointments.model.Doctor
 import com.ronalverey.myappointments.model.Schedule
 import com.ronalverey.myappointments.model.Specialty
@@ -8,9 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
     @GET("specialties")
@@ -21,6 +21,12 @@ interface ApiService {
 
     @GET("schedule/hours")
     fun getAvailableHours(@Query("doctor_id") doctorId: Int, @Query("date") date: String): Call<Schedule>
+
+    @POST("login")
+    fun postLogin(@Query("email") email: String, @Query("password") password: String): Call<GenericResponse<Login>>
+
+    @POST("logout")
+    fun postLogout(@Header("Authorization") authHeader: String): Call<Void>
 
     companion object Factory {
         private const val BASE_URL = "https://test-appointments.azurewebsites.net/api/"

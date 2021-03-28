@@ -9,7 +9,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.ronalverey.myappointments.R
@@ -81,10 +80,8 @@ class CreateAppointmentActivity : AppCompatActivity() {
     private fun onSelectedDoctorChanged() {
         binding.layoutStep2.spinnerDoctors.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
             override fun onItemSelected(adapter: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (!binding.layoutStep2.etScheduledDate.text.isNullOrEmpty()){
-                    val selectedDoctor = adapter?.getItemAtPosition(position) as Doctor
-                    loadAvailableHours(selectedDoctor.id, binding.layoutStep2.etScheduledDate.text.toString())
-                }
+                val selectedDoctor = adapter?.getItemAtPosition(position) as Doctor
+                loadAvailableHours(selectedDoctor.id, binding.layoutStep2.etScheduledDate.text.toString())
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -120,14 +117,25 @@ class CreateAppointmentActivity : AppCompatActivity() {
     }
 
     private fun loadAvailableHours(doctorId: Int, date: String) {
+        if(date.isNullOrEmpty()){
+            return;
+        }
+
         var call = apiService.getAvailableHours(doctorId, date)
         call.enqueue(object: Callback<Schedule>{
             override fun onResponse(call: Call<Schedule>, response: Response<Schedule>) {
                 if (response.isSuccessful){ // status 200...300
                     response.body()?.let {
                         var schedule = it
-                        //binding.layoutStep2.spinnerDoctors.adapter = ArrayAdapter<Doctor>(this@CreateAppointmentActivity, android.R.layout.simple_list_item_1, doctors)
-                        Toast.makeText(this@CreateAppointmentActivity, "morning: ${schedule?.morning.size}, afternoon: ${schedule?.afternoon.size}", Toast.LENGTH_SHORT).show()
+                        schedule?.let {
+                            binding.layoutStep2.tvSelectDoctorAndDate.visibility = View.GONE
+                            val intervals = schedule.morning + schedule.afternoon
+                            val hours = ArrayList<String>()
+                            intervals.forEach { interval ->
+                                hours.add(interval.start)
+                            }
+                            displayIntervalRadioBtns(hours)
+                        }
                     }
                 }
             }
@@ -198,7 +206,6 @@ class CreateAppointmentActivity : AppCompatActivity() {
         val listener = DatePickerDialog.OnDateSetListener { view, y, m, d ->
             selectedCalendar.set(y, m, d)
             binding.layoutStep2.etScheduledDate.setText(resources.getString(R.string.date_format, y, (m + 1).toDigits(), d.toDigits()))
-            displayTimeRadioButtons()
         }
         binding.layoutStep2.etScheduledDate.error = null
         createDatePickerDialog(listener, year, month, dayOfMonth)
@@ -217,11 +224,15 @@ class CreateAppointmentActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-    private fun displayTimeRadioButtons() {
-        removeTimeRadioButtons()
-        var hours = arrayOf("3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM")
+    private fun displayIntervalRadioBtns(hours: ArrayList<String>) {
+        removeIntervalRadioBtns()
         var goToLeft = true
+        if(hours.isNullOrEmpty()){
+            binding.layoutStep2.tvNotAvailableHours.visibility = View.VISIBLE
+            return;
+        }
 
+        binding.layoutStep2.tvNotAvailableHours.visibility = View.GONE
         hours.forEach {
             var radioButton = RadioButton(this)
             radioButton.id = View.generateViewId() //disponible desde Android API 17
@@ -242,7 +253,7 @@ class CreateAppointmentActivity : AppCompatActivity() {
         }
     }
 
-    private fun removeTimeRadioButtons() {
+    private fun removeIntervalRadioBtns() {
         selectedTimeRadioButton = null
         binding.layoutStep2.radioGroupLeft.removeAllViews()
         binding.layoutStep2.radioGroupRight.removeAllViews()

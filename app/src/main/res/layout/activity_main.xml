@@ -66,6 +66,7 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/edEmail"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/white"
@@ -75,6 +76,7 @@
                 android:shadowRadius="8" />
 
             <EditText
+                android:id="@+id/edPassword"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="24dp"
