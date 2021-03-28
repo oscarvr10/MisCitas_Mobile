@@ -57,6 +57,11 @@ class MainActivity : AppCompatActivity() {
         val email = binding?.edEmail?.text.toString()
         val password = binding?.edPassword?.text.toString()
 
+        if(email.isNullOrEmpty() || password.isNullOrEmpty()){
+            toast(getString(R.string.error_empty_credentials))
+            return;
+        }
+
         val call = apiService.postLogin(email, password)
         call.enqueue(object: Callback<GenericResponse<Login>>{
             override fun onResponse(call: Call<GenericResponse<Login>>, response: Response<GenericResponse<Login>>) {
@@ -68,6 +73,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     if(loginResponse.success){
                         createSessionPreferences(loginResponse.data.jwt)
+                        toast(getString(R.string.welcome_name, loginResponse.data.user.name))
                         goToMenuActivity()
                     }
                 } else if (response.code() == 401) {

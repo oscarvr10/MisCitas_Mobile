@@ -2,6 +2,7 @@ package com.ronalverey.myappointments.io
 
 import com.ronalverey.myappointments.io.response.GenericResponse
 import com.ronalverey.myappointments.io.response.Login
+import com.ronalverey.myappointments.model.Appointment
 import com.ronalverey.myappointments.model.Doctor
 import com.ronalverey.myappointments.model.Schedule
 import com.ronalverey.myappointments.model.Specialty
@@ -27,6 +28,9 @@ interface ApiService {
 
     @POST("logout")
     fun postLogout(@Header("Authorization") authHeader: String): Call<Void>
+
+    @GET("appointments")
+    fun getAppointments(@Header("Authorization") authHeader: String): Call<ArrayList<Appointment>>
 
     companion object Factory {
         private const val BASE_URL = "https://test-appointments.azurewebsites.net/api/"

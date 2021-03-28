@@ -51,4 +51,7 @@
     <string name="label_not_available_hours">No hay horas disponibles para el médico en el dia seleccionado</string>
     <string name="error_login_response">Se obtuvo una respuesta inesperada del servidor. Intente más tarde</string>
     <string name="error_invalid_credentials">Las credenciales son inválidas. Revise e intente nuevamente</string>
+    <string name="error_empty_credentials">Por favor, ingrese su correo y contraseña</string>
+    <string name="welcome_name">Bienvenido %1$s</string>
+    <string name="item_appointment_created_at">Registrada el dia %1$s con la siguiente descripción</string>
 </resources>
