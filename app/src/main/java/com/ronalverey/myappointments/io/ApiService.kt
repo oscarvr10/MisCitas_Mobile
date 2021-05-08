@@ -1,5 +1,6 @@
 package com.ronalverey.myappointments.io
 
+import com.ronalverey.myappointments.io.response.BooleanResponse
 import com.ronalverey.myappointments.io.response.GenericResponse
 import com.ronalverey.myappointments.io.response.Login
 import com.ronalverey.myappointments.model.Appointment
@@ -31,6 +32,27 @@ interface ApiService {
 
     @GET("appointments")
     fun getAppointments(@Header("Authorization") authHeader: String): Call<ArrayList<Appointment>>
+
+    @POST("appointments")
+    @Headers("Accept: application/json")
+    fun postAppointment(
+        @Header("Authorization") authHeader: String,
+        @Query("description") description: String,
+        @Query("specialty_id") specialtyId: Int,
+        @Query("doctor_id") doctorId: Int,
+        @Query("scheduled_date") scheduledDate: String,
+        @Query("scheduled_time") scheduledTime: String,
+        @Query("type") type: String
+    ): Call<BooleanResponse>
+
+    @POST("register")
+    @Headers("Accept: application/json")
+    fun postRegister(
+        @Query("name") name: String,
+        @Query("email") email: String,
+        @Query("password") password: String,
+        @Query("password_confirmation") pwdConfirmation: String
+    ): Call<GenericResponse<Login>>
 
     companion object Factory {
         private const val BASE_URL = "https://test-appointments.azurewebsites.net/api/"

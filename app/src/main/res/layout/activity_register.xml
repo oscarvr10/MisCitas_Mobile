@@ -64,6 +64,7 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/etRegisterName"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/white"
@@ -73,6 +74,7 @@
                 android:shadowRadius="8" />
 
             <EditText
+                android:id="@+id/etRegisterEmail"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="24dp"
@@ -83,6 +85,7 @@
                 android:shadowRadius="8" />
 
             <EditText
+                android:id="@+id/etRegisterPassword"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="24dp"
@@ -92,7 +95,19 @@
                 android:inputType="textPassword"
                 android:shadowRadius="8" />
 
+            <EditText
+                android:id="@+id/etRegisterPwdConfirmation"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/white"
+                android:elevation="@dimen/cardview_default_elevation"
+                android:hint="@string/label_confirm_password"
+                android:inputType="textPassword"
+                android:shadowRadius="8" />
+
             <Button
+                android:id="@+id/btnConfirmRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

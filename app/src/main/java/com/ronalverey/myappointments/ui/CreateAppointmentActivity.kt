@@ -11,12 +11,16 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import com.ronalverey.myappointments.PreferenceHelper.defaultPrefs
+import com.ronalverey.myappointments.PreferenceHelper.get
 import com.ronalverey.myappointments.R
 import com.ronalverey.myappointments.databinding.ActivityCreateAppointmentBinding
 import com.ronalverey.myappointments.io.ApiService
+import com.ronalverey.myappointments.io.response.BooleanResponse
 import com.ronalverey.myappointments.model.Doctor
 import com.ronalverey.myappointments.model.Schedule
 import com.ronalverey.myappointments.model.Specialty
+import com.ronalverey.myappointments.util.toast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,6 +34,10 @@ class CreateAppointmentActivity : AppCompatActivity() {
 
     private val apiService: ApiService by lazy {
         ApiService.create()
+    }
+
+    private val preferences by lazy {
+        defaultPrefs(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,8 +74,7 @@ class CreateAppointmentActivity : AppCompatActivity() {
         }
 
         binding.layoutStep3.btnConfirm.setOnClickListener {
-            Toast.makeText(this, getString(R.string.saved_appointment), Toast.LENGTH_SHORT).show()
-            //finish()
+            performStoreAppointment()
         }
 
         loadSpecialties()
@@ -75,6 +82,36 @@ class CreateAppointmentActivity : AppCompatActivity() {
         onSelectedDoctorChanged()
 
         val doctorOptions = arrayOf("Doctor A", "Doctor B", "Doctor C")
+    }
+
+    private fun performStoreAppointment() {
+        binding.layoutStep3.btnConfirm.isClickable = false
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
+        val description = binding.layoutStep3.tvConfirmDescription.text.toString()
+        val specialty = binding.layoutStep1.spinnerSpecialties.selectedItem as Specialty
+        val doctor = binding.layoutStep2.spinnerDoctors.selectedItem as Doctor
+        val scheduledDate = binding.layoutStep3.tvConfirmScheduledDate.text.toString()
+        val scheduledTime = binding.layoutStep3.tvConfirmScheduledTime.text.toString()
+        val type = binding.layoutStep3.tvConfirmType.text.toString()
+
+        val call = apiService.postAppointment(authHeader, description, specialty.id, doctor.id, scheduledDate, scheduledTime, type)
+        call.enqueue(object: Callback<BooleanResponse> {
+            override fun onResponse(call: Call<BooleanResponse>, response: Response<BooleanResponse>) {
+                if(response.isSuccessful) {
+                    toast(getString(R.string.create_appointment_success))
+                    finish()
+                } else {
+                    toast(getString(R.string.create_appointment_error))
+                    binding.layoutStep3.btnConfirm.isClickable = true
+                }
+            }
+
+            override fun onFailure(call: Call<BooleanResponse>, t: Throwable) {
+                toast(t.localizedMessage)
+                binding.layoutStep3.btnConfirm.isClickable = true
+            }
+        })
     }
 
     private fun onSelectedDoctorChanged() {

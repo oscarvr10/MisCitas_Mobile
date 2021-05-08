@@ -109,6 +109,5 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         else
             snackbar.show()
-
     }
 }

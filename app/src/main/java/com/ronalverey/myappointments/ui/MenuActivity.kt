@@ -17,6 +17,7 @@ class MenuActivity : AppCompatActivity() {
     private val apiService by lazy {
         ApiService.create()
     }
+
     private val preferences by lazy {
         defaultPrefs(this)
     }
