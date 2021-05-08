@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "31561256018",
+    "project_id": "my-appointments-f17a8",
+    "storage_bucket": "my-appointments-f17a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31561256018:android:d6c73439811e290cf9a38b",
+        "android_client_info": {
+          "package_name": "com.ronalverey.myappointments"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31561256018-0a2app4q9k67tgpas53agmi8p1sqsj1k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbTm_zBK6tHFR0j8e0HW8VUbfqGoV8Bc8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31561256018-0a2app4q9k67tgpas53agmi8p1sqsj1k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
