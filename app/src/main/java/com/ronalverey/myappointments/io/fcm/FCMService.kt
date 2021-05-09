@@ -11,17 +11,35 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.ronalverey.myappointments.PreferenceHelper
+import com.ronalverey.myappointments.PreferenceHelper.get
 import com.ronalverey.myappointments.R
+import com.ronalverey.myappointments.io.ApiService
 import com.ronalverey.myappointments.ui.MainActivity
+import com.ronalverey.myappointments.util.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FCMService : FirebaseMessagingService() {
+
+    private val apiService by lazy {
+        ApiService.create()
+    }
+
+    private val preferences by lazy {
+        PreferenceHelper.defaultPrefs(this)
+    }
+
+    companion object {
+        private const val TAG = "FCMService"
+    }
 
     /**
      * Called when message is received.
      *
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
-    // [START receive_message]
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // There are two types of messages data messages and notification messages. Data messages are handled
         // here in onMessageReceived whether the app is in the foreground or background. Data messages are the type
@@ -51,23 +69,15 @@ class FCMService : FirebaseMessagingService() {
 
         // sendNotification()
     }
-    // [END receive_message]
 
-    // [START on_new_token]
     /**
      * Called if the FCM registration token is updated. This may occur if the security of
      * the previous token had been compromised. Note that this is called when the
      * FCM registration token is initially generated so this is where you would retrieve the token.
      */
-    override fun onNewToken(token: String) {
-        Log.d(TAG, "Refreshed token: $token")
-
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // FCM registration token to your app server.
-        sendRegistrationToServer(token)
+    override fun onNewToken(newToken: String) {
+        sendTokenToServer(newToken)
     }
-    // [END on_new_token]
 
     /**
      * Handle time allotted to BroadcastReceivers.
@@ -84,9 +94,29 @@ class FCMService : FirebaseMessagingService() {
      *
      * @param token The new token.
      */
-    private fun sendRegistrationToServer(token: String?) {
-        // TODO: Implement this method to send token to your app server.
-        Log.d(TAG, "sendRegistrationTokenToServer($token)")
+    private fun sendTokenToServer(token: String?) {
+        val jwt = preferences["jwt", ""]
+        if(jwt.isNullOrEmpty() ||token.isNullOrEmpty()){
+            return;
+        }
+
+        var authHeader = "Bearer $jwt"
+
+        val call = apiService.postToken(authHeader, token)
+
+        call.enqueue(object: Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful){
+                    Log.d(TAG, "Token registrado correctamente")
+                }else{
+                    Log.d(TAG, "Error al registrar Token")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                toast(t.localizedMessage)
+            }
+        })
     }
 
     /**
@@ -121,9 +151,5 @@ class FCMService : FirebaseMessagingService() {
         }
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
-    }
-
-    companion object {
-        private const val TAG = "FCMService"
     }
 }

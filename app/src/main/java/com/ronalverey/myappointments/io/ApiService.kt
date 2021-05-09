@@ -45,6 +45,12 @@ interface ApiService {
         @Query("type") type: String
     ): Call<BooleanResponse>
 
+    @POST("fcm/token")
+    fun postToken(
+        @Header("Authorization") authHeader: String,
+        @Query("device_token") token: String?
+    ): Call<Void>
+
     @POST("register")
     @Headers("Accept: application/json")
     fun postRegister(

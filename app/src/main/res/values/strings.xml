@@ -60,4 +60,7 @@
     <string name="error_register_empty_fields">Por favor, complete todos los campos para continuar</string>
     <string name="error_passwords_do_not_match">Las contraseñas no coinciden</string>
     <string name="error_register_validation">Ocurrió un error en el registro</string>
+    <string name="default_notification_channel_id" translatable="false">default_channel</string>
+    <string name="title_message">My Appointments</string>
+    <string name="msg_token_fcm">FCM Token: %s</string>
 </resources>
