@@ -61,7 +61,7 @@ interface ApiService {
     ): Call<GenericResponse<Login>>
 
     companion object Factory {
-        private const val BASE_URL = "https://test-appointments.azurewebsites.net/api/"
+        private const val BASE_URL = "http://my-appointments.azurewebsites.net/api/"
         //private const val BASE_URL = "http://my-appointments.test/api/"
 
         fun create() : ApiService {
