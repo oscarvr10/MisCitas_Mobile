@@ -3,6 +3,7 @@ package com.ronalverey.myappointments.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -105,5 +106,10 @@ class MenuActivity : AppCompatActivity() {
                 toast(t.localizedMessage)
             }
         })
+    }
+
+    fun editProfile(view: View) {
+        var intent = Intent(this, ProfileActivity::class.java);
+        startActivity(intent);
     }
 }

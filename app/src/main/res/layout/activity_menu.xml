@@ -12,13 +12,22 @@
 
     <TextView
         android:layout_width="wrap_content"
+        android:onClick="editProfile"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:paddingTop="12dp"
         android:text="@string/welcome"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/white"
         android:textSize="28dp" />
+
+    <Button
+        android:layout_marginBottom="12dp"
+        android:id="@+id/btnProfile"
+        android:layout_width="match_parent"
+        android:drawableLeft="@drawable/ic_profile"
+        style="@style/MenuButton"
+        android:text="@string/btn_edit_profile"
+        android:onClick="editProfile"/>
 
     <Button
         android:id="@+id/btnCreateAppointment"
