@@ -3,10 +3,7 @@ package com.ronalverey.myappointments.io
 import com.ronalverey.myappointments.io.response.BooleanResponse
 import com.ronalverey.myappointments.io.response.GenericResponse
 import com.ronalverey.myappointments.io.response.Login
-import com.ronalverey.myappointments.model.Appointment
-import com.ronalverey.myappointments.model.Doctor
-import com.ronalverey.myappointments.model.Schedule
-import com.ronalverey.myappointments.model.Specialty
+import com.ronalverey.myappointments.model.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -17,6 +14,10 @@ import retrofit2.http.*
 interface ApiService {
     @GET("specialties")
     fun getSpecialties(): Call<ArrayList<Specialty>>
+
+    @GET("user")
+    @Headers("Accept: application/json")
+    fun getUser(@Header("Authorization") authHeader: String): Call<User>
 
     @GET("specialties/{specialty}/doctors")
     fun getDoctorsBySpecialty(@Path("specialty") specialtyId: Int): Call<ArrayList<Doctor>>
@@ -61,7 +62,7 @@ interface ApiService {
     ): Call<GenericResponse<Login>>
 
     companion object Factory {
-        private const val BASE_URL = "http://my-appointments.azurewebsites.net/api/"
+        private const val BASE_URL = "https://my-appointments.azurewebsites.net/api/"
         //private const val BASE_URL = "http://my-appointments.test/api/"
 
         fun create() : ApiService {
