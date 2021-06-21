@@ -24,6 +24,10 @@ class MainActivity : AppCompatActivity() {
         ApiService.create()
     }
 
+    private val preferences by lazy {
+        defaultPrefs(this)
+    }
+
     //First time it's required it will be initialized just once
     private val snackbar by lazy {
         Snackbar.make(binding!!.mainLayout, R.string.press_back_again, Snackbar.LENGTH_SHORT)
@@ -34,8 +38,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
-        val prefs = defaultPrefs(this)
-        if (prefs["jwt", ""].contains("."))
+        if (preferences["jwt", ""].contains("."))
             goToMenuActivity()
 
         binding!!.btnLogin.setOnClickListener { v ->
@@ -103,8 +106,7 @@ class MainActivity : AppCompatActivity() {
         //val preferences = getSharedPreferences("general", Context.MODE_PRIVATE);
         //val editor = preferences.edit();
         //editor.putBoolean("session", true).apply();
-        val prefs = defaultPrefs(this)
-        prefs["jwt"] = jwt
+        preferences["jwt"] = jwt
     }
 
     override fun onBackPressed() {

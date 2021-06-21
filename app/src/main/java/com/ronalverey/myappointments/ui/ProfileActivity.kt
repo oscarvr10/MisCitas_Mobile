@@ -6,8 +6,10 @@ import android.os.Handler
 import android.view.View
 import com.ronalverey.myappointments.PreferenceHelper
 import com.ronalverey.myappointments.PreferenceHelper.get
+import com.ronalverey.myappointments.R
 import com.ronalverey.myappointments.databinding.ActivityProfileBinding
 import com.ronalverey.myappointments.io.ApiService
+import com.ronalverey.myappointments.io.response.GenericResponse
 import com.ronalverey.myappointments.model.User
 import com.ronalverey.myappointments.util.toast
 import retrofit2.Call
@@ -34,19 +36,21 @@ class ProfileActivity : AppCompatActivity() {
         val authHeader = "Bearer $jwt"
 
         var call = apiService.getUser(authHeader)
-        call.enqueue(object : Callback<User>{
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+        call.enqueue(object : Callback<GenericResponse<User>>{
+            override fun onResponse(
+                call: Call<GenericResponse<User>>,
+                response: Response<GenericResponse<User>>
+            ) {
                 if(response.isSuccessful){
                     var user = response.body()
                     if(user != null)
-                        displayProfileData(user)
+                        displayProfileData(user.data)
                 }
             }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
+            override fun onFailure(call: Call<GenericResponse<User>>, t: Throwable) {
                 toast(t.localizedMessage)
             }
-
         })
     }
 
@@ -57,5 +61,36 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.pbProfile.visibility = View.GONE
         binding.llProfile.visibility = View.VISIBLE
+        
+        binding.btnSaveProfile.setOnClickListener{
+            saveProfile()
+        }
+    }
+
+    private fun saveProfile(){
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
+        val name = binding.etName.text.toString()
+        val phone = binding.etPhone.text.toString()
+        val address = binding.etAddress.text.toString()
+
+        if(name.length < 4){
+            binding.inputLayoutName.error = getString(R.string.error_profile_name)
+            return;
+        }
+
+        val call = apiService.postUser(authHeader, name, phone, address)
+        call.enqueue(object: Callback<Void>{
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                toast(getString(R.string.profile_saved_message))
+                finish()
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                toast(t.localizedMessage)
+            }
+
+        })
+
     }
 }

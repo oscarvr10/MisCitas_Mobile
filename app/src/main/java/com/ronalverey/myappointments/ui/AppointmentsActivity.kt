@@ -9,6 +9,8 @@ import com.ronalverey.myappointments.model.Appointment
 import com.ronalverey.myappointments.PreferenceHelper.defaultPrefs
 import com.ronalverey.myappointments.PreferenceHelper.get
 import com.ronalverey.myappointments.PreferenceHelper.set
+import com.ronalverey.myappointments.R
+import com.ronalverey.myappointments.io.response.GenericResponse
 import com.ronalverey.myappointments.util.toast
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,17 +42,21 @@ class AppointmentsActivity : AppCompatActivity() {
     private fun loadAppointments() {
         val jwt = preferences["jwt", ""]
         val call = apiService.getAppointments("Bearer $jwt")
-        call.enqueue(object: Callback<ArrayList<Appointment>> {
-            override fun onResponse(call: Call<ArrayList<Appointment>>, response: Response<ArrayList<Appointment>>) {
+        call.enqueue(object: Callback<GenericResponse<ArrayList<Appointment>>> {
+            override fun onResponse(call: Call<GenericResponse<ArrayList<Appointment>>>, response: Response<GenericResponse<ArrayList<Appointment>>>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        appoinmentAdapter.appointments = it
-                        appoinmentAdapter.notifyDataSetChanged()
+                        if(it.data.size > 0) {
+                            appoinmentAdapter.appointments = it.data
+                            appoinmentAdapter.notifyDataSetChanged()
+                        } else{
+                            toast(getString(R.string.no_appointments_message))
+                        }
                     }
                 }
             }
 
-            override fun onFailure(call: Call<ArrayList<Appointment>>, t: Throwable) {
+            override fun onFailure(call: Call<GenericResponse<ArrayList<Appointment>>>, t: Throwable) {
                 toast(t.localizedMessage)
             }
 

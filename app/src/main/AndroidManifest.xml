@@ -15,7 +15,6 @@
         <activity
             android:name=".ui.ProfileActivity"
             android:parentActivityName=".ui.MenuActivity"></activity>
-        <activity android:name=".ProfileActivity" />
         <!--
          Set custom default icon. This is used when no icon is set for incoming notification messages.
              See README(https://goo.gl/l4GJaQ) for more.

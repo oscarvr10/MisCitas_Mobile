@@ -45,6 +45,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLayoutName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
@@ -88,7 +89,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/btnConfirmProfile"
+                android:id="@+id/btnSaveProfile"
                 style="@style/MenuButton"
                 android:layout_width="match_parent"
                 android:layout_marginTop="12dp"

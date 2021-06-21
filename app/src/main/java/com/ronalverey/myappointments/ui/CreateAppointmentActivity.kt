@@ -17,6 +17,7 @@ import com.ronalverey.myappointments.R
 import com.ronalverey.myappointments.databinding.ActivityCreateAppointmentBinding
 import com.ronalverey.myappointments.io.ApiService
 import com.ronalverey.myappointments.io.response.BooleanResponse
+import com.ronalverey.myappointments.io.response.GenericResponse
 import com.ronalverey.myappointments.model.Doctor
 import com.ronalverey.myappointments.model.Schedule
 import com.ronalverey.myappointments.model.Specialty
@@ -159,11 +160,11 @@ class CreateAppointmentActivity : AppCompatActivity() {
         }
 
         var call = apiService.getAvailableHours(doctorId, date)
-        call.enqueue(object: Callback<Schedule>{
-            override fun onResponse(call: Call<Schedule>, response: Response<Schedule>) {
+        call.enqueue(object: Callback<GenericResponse<Schedule>>{
+            override fun onResponse(call: Call<GenericResponse<Schedule>>, response: Response<GenericResponse<Schedule>>) {
                 if (response.isSuccessful){ // status 200...300
                     response.body()?.let {
-                        var schedule = it
+                        var schedule = it.data
                         schedule?.let {
                             binding.layoutStep2.tvSelectDoctorAndDate.visibility = View.GONE
                             val intervals = schedule.morning + schedule.afternoon
@@ -177,8 +178,8 @@ class CreateAppointmentActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<Schedule>, t: Throwable) {
-                Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_hours), Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<GenericResponse<Schedule>>, t: Throwable) {
+                toast(getString(R.string.error_loading_hours))
                 finish()
             }
         })
@@ -186,18 +187,18 @@ class CreateAppointmentActivity : AppCompatActivity() {
 
     private fun loadDoctorsBySpecialty(specialtyId: Int) {
         var call = apiService.getDoctorsBySpecialty(specialtyId)
-        call.enqueue(object: Callback<ArrayList<Doctor>>{
-            override fun onResponse(call: Call<ArrayList<Doctor>>, response: Response<ArrayList<Doctor>>) {
+        call.enqueue(object: Callback<GenericResponse<ArrayList<Doctor>>>{
+            override fun onResponse(call: Call<GenericResponse<ArrayList<Doctor>>>, response: Response<GenericResponse<ArrayList<Doctor>>>) {
                 if (response.isSuccessful){ // status 200...300
                     response.body()?.let {
-                        var doctors = it.toMutableList()
+                        var doctors = it.data.toMutableList()
                         binding.layoutStep2.spinnerDoctors.adapter = ArrayAdapter<Doctor>(this@CreateAppointmentActivity, android.R.layout.simple_list_item_1, doctors)
                     }
                 }
             }
 
-            override fun onFailure(call: Call<ArrayList<Doctor>>, t: Throwable) {
-                Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_doctors), Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<GenericResponse<ArrayList<Doctor>>>, t: Throwable) {
+                toast(getString(R.string.error_loading_doctors))
                 finish()
             }
         })
@@ -205,18 +206,18 @@ class CreateAppointmentActivity : AppCompatActivity() {
 
     private fun loadSpecialties() {
         var call = apiService.getSpecialties()
-        call.enqueue(object: Callback<ArrayList<Specialty>>{
-            override fun onResponse(call: Call<ArrayList<Specialty>>, response: Response<ArrayList<Specialty>>) {
+        call.enqueue(object: Callback<GenericResponse<ArrayList<Specialty>>>{
+            override fun onResponse(call: Call<GenericResponse<ArrayList<Specialty>>>, response: Response<GenericResponse<ArrayList<Specialty>>>) {
                 if (response.isSuccessful){ // status 200...300
                     response.body()?.let {
-                        var specialties = it.toMutableList()
+                        var specialties = it.data.toMutableList()
                         binding.layoutStep1.spinnerSpecialties.adapter = ArrayAdapter<Specialty>(this@CreateAppointmentActivity, android.R.layout.simple_list_item_1, specialties)
                     }
                 }
             }
 
-            override fun onFailure(call: Call<ArrayList<Specialty>>, t: Throwable) {
-                Toast.makeText(this@CreateAppointmentActivity, getString(R.string.error_loading_specialties), Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<GenericResponse<ArrayList<Specialty>>>, t: Throwable) {
+                toast(getString(R.string.error_loading_specialties))
                 finish()
             }
         })

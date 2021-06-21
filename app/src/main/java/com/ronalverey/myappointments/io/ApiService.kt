@@ -13,17 +13,26 @@ import retrofit2.http.*
 
 interface ApiService {
     @GET("specialties")
-    fun getSpecialties(): Call<ArrayList<Specialty>>
+    fun getSpecialties(): Call<GenericResponse<ArrayList<Specialty>>>
 
     @GET("user")
     @Headers("Accept: application/json")
-    fun getUser(@Header("Authorization") authHeader: String): Call<User>
+    fun getUser(@Header("Authorization") authHeader: String): Call<GenericResponse<User>>
+
+    @POST("user")
+    @Headers("Accept: application/json")
+    fun postUser(
+        @Header("Authorization") authHeader: String,
+        @Query("name") name: String,
+        @Query("phone") phone: String,
+        @Query("address") address: String
+    ): Call<Void>
 
     @GET("specialties/{specialty}/doctors")
-    fun getDoctorsBySpecialty(@Path("specialty") specialtyId: Int): Call<ArrayList<Doctor>>
+    fun getDoctorsBySpecialty(@Path("specialty") specialtyId: Int): Call<GenericResponse<ArrayList<Doctor>>>
 
     @GET("schedule/hours")
-    fun getAvailableHours(@Query("doctor_id") doctorId: Int, @Query("date") date: String): Call<Schedule>
+    fun getAvailableHours(@Query("doctor_id") doctorId: Int, @Query("date") date: String): Call<GenericResponse<Schedule>>
 
     @POST("login")
     fun postLogin(@Query("email") email: String, @Query("password") password: String): Call<GenericResponse<Login>>
@@ -32,7 +41,7 @@ interface ApiService {
     fun postLogout(@Header("Authorization") authHeader: String): Call<Void>
 
     @GET("appointments")
-    fun getAppointments(@Header("Authorization") authHeader: String): Call<ArrayList<Appointment>>
+    fun getAppointments(@Header("Authorization") authHeader: String): Call<GenericResponse<ArrayList<Appointment>>>
 
     @POST("appointments")
     @Headers("Accept: application/json")

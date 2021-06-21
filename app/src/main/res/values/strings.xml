@@ -69,4 +69,7 @@
     <string name="label_phone">Teléfono</string>
     <string name="label_address">Dirección</string>
     <string name="btn_confirm_profile">Guardar</string>
+    <string name="profile_saved_message">Los cambios se guardaron correctamente</string>
+    <string name="error_profile_name">El nombre ingresado debe ser mayor a 4 caracteres</string>
+    <string name="no_appointments_message">No hay citas reservadas</string>
 </resources>
