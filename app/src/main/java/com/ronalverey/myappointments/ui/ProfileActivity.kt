@@ -2,7 +2,6 @@ package com.ronalverey.myappointments.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import com.ronalverey.myappointments.PreferenceHelper
 import com.ronalverey.myappointments.PreferenceHelper.get
@@ -42,9 +41,10 @@ class ProfileActivity : AppCompatActivity() {
                 response: Response<GenericResponse<User>>
             ) {
                 if(response.isSuccessful){
-                    var user = response.body()
-                    if(user != null)
+                    response.body()?.let {
+                        var user = it
                         displayProfileData(user.data)
+                    }
                 }
             }
 
