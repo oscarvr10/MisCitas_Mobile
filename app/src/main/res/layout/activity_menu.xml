@@ -12,7 +12,6 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:onClick="editProfile"
         android:layout_height="60dp"
         android:layout_gravity="center"
         android:text="@string/welcome"
@@ -26,8 +25,7 @@
         android:layout_width="match_parent"
         android:drawableLeft="@drawable/ic_profile"
         style="@style/MenuButton"
-        android:text="@string/btn_edit_profile"
-        android:onClick="editProfile"/>
+        android:text="@string/btn_edit_profile"/>
 
     <Button
         android:id="@+id/btnCreateAppointment"

@@ -37,9 +37,10 @@ class ProfileActivity : AppCompatActivity() {
         call.enqueue(object : Callback<User>{
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if(response.isSuccessful){
-                    var user = response.body()
-                    if(user != null)
+                    response.body()?.let {
+                        var user = it
                         displayProfileData(user)
+                    }
                 }
             }
 
